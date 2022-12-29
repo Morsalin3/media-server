@@ -22,6 +22,12 @@ async function run(){
     try{
         const PostsCollection = client.db("dbMedia").collection("posts");
 
+        app.post('/posts', async(req, res)=>{
+            const posts = req.body;
+            const result= PostsCollection.insertOne(posts);
+            res.send(result)
+        })
+
         app.get('/posts', async(req, res)=>{
             const query = {};
             const options = await PostsCollection.find(query).toArray();
