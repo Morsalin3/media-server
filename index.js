@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 const port = process.env.PORT || 5000 ;
 
@@ -33,13 +33,33 @@ async function run(){
             const query = {};
             const options = await PostsCollection.find(query).toArray();
             res.send(options);
-        })
+        });
         
-        app.post('/user', async(req, res)=>{
+        app.post('/users', async(req, res)=>{
             const user = req.body;
             const result = await usersCollection.insertOne(user);
             res.send(result);
+        });
+
+        app.get('/user', async(req, res)=>{
+            let query = {};
+            if(req.query.email){
+                query={
+                    email: req.query.email
+                }
+            }
+          
+            const user = await usersCollection.findOne(query);
+            res.send(user);
+        });
+
+        app.get('/users', async(req, res)=>{
+            const query = {};
+            const options = await usersCollection.find(query).toArray();
+            res.send(options);
         })
+
+
     }
     finally{
 
